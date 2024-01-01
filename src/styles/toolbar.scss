@@ -1,0 +1,73 @@
+@import './variables.scss';
+
+.toolbar {
+  height: $toolbar-height;
+  background-color: $color-white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  width: 100%;
+  box-shadow: 0 4px 5px $color-gray;
+  padding: 0 10px;
+  z-index: 2;
+}
+
+.toolbar.disabled .toolbar__btn,
+.toolbar.disabled .toolbar__palette {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.settings {
+  top: $toolbar-height;
+  z-index: 1;
+}
+
+.toolbar__left,
+.toolbar__right {
+  display: flex;
+  gap: 10px;
+  align-items: end;
+}
+
+.toolbar__btn {
+  height: 25px;
+  width: 25px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background-size: cover;
+}
+
+.brush {
+  background: url('../assets/image/brush.png') no-repeat center center;
+}
+
+.rect {
+  background: url('../assets/image/rect.png') no-repeat center center;
+}
+
+.circle {
+  background: url('../assets/image/circle.png') no-repeat center center;
+}
+
+.eraser {
+  background: url('../assets/image/eraser.png') no-repeat center center;
+}
+
+.line {
+  background: url('../assets/image/line.png') no-repeat center center;
+}
+
+.undo {
+  background: url('../assets/image/undo.png') no-repeat center center;
+}
+
+.redo {
+  background: url('../assets/image/redo.png') no-repeat center center;
+}
+
+.save {
+  background: url('../assets/image/save.png') no-repeat center center;
+}
