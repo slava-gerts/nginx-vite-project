@@ -3,7 +3,6 @@ import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import Canvas from 'components/Canvas'
 import Settings from 'components/Settings'
 import ToolBar from 'components/ToolBar'
-import {ModalForm} from 'components/ModalForm'
 
 import './styles/app.scss'
 
@@ -17,7 +16,6 @@ function App() {
           <ToolBar />
           <Settings />
           <Canvas />
-          <ModalForm isOpen={true}>Message</ModalForm>
         </div>
       )
     },

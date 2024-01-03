@@ -10,8 +10,13 @@
   box-shadow: 0 0 0.5rem 0.25rem hsl(0 0% 0% / 20%);
 }
 
+.modal::backdrop {
+  background: hsl(0 0% 0% / 50%);
+}
+
 .closeButton {
   position: absolute;
   top: 5px;
   right: 5px;
+  cursor: pointer;
 }

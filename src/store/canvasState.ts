@@ -1,9 +1,15 @@
 import {makeAutoObservable} from 'mobx'
 
+import {initializeSideEffects} from 'connection'
+
 class CanvasState {
   canvas: HTMLCanvasElement | null = null
   undoList: string[] = []
   redoList: string[] = []
+
+  username: string = ''
+  socket: WebSocket | null = null
+  sessionId: string = ''
 
   constructor() {
     makeAutoObservable(this)
@@ -19,6 +25,18 @@ class CanvasState {
 
   pushToRedo(data: string) {
     this.redoList.push(data)
+  }
+
+  setSessionId(sessionId: string) {
+    this.sessionId = sessionId
+  }
+
+  setSocket(socket: WebSocket) {
+    this.socket = socket
+  }
+
+  setUserName(username: string) {
+    this.username = username
   }
 
   private get canvasSize(): [number, number, number, number] {
@@ -58,3 +76,5 @@ class CanvasState {
 }
 
 export default new CanvasState()
+
+initializeSideEffects()

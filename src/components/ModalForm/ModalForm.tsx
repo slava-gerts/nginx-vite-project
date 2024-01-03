@@ -1,15 +1,25 @@
-import {ReactNode, useRef} from 'react'
+import {ReactNode, useEffect, useRef} from 'react'
+import classNames from 'classnames'
 
 import 'styles/modalForm.scss'
 
 interface ModalFormProps {
-  isOpen: boolean
+  className?: string
+  show: boolean
   onClose?: () => void
   children: ReactNode
 }
 
-const ModalForm = ({isOpen, onClose, children}: ModalFormProps) => {
-  const modalRef = useRef<HTMLDialogElement | null>(null)
+const ModalForm = ({className, show, onClose, children}: ModalFormProps) => {
+  const modalRef = useRef<HTMLDialogElement>(null)
+
+  useEffect(() => {
+    if (show) {
+      modalRef.current?.showModal()
+    } else {
+      onCloseHandler()
+    }
+  }, [show])
 
   const onCloseHandler = () => {
     modalRef.current?.close()
@@ -17,7 +27,7 @@ const ModalForm = ({isOpen, onClose, children}: ModalFormProps) => {
   }
 
   return (
-    <dialog className='modal' ref={modalRef} open={isOpen}>
+    <dialog className={classNames('modal', className)} ref={modalRef}>
       {children}
       <button className='closeButton' onClick={onCloseHandler}>&#10005;</button>
     </dialog>

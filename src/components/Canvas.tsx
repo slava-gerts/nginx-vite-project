@@ -1,6 +1,7 @@
 import {observer} from 'mobx-react-lite'
-import React, { useEffect } from 'react'
+import React from 'react'
 
+import {ModalForm} from 'components/ModalForm'
 import canvasState from 'store/canvasState'
 import toolState from 'store/toolState'
 import Brush from 'tools/Brush'
@@ -8,15 +9,18 @@ import Brush from 'tools/Brush'
 import 'styles/canvas.scss'
 
 const Canvas = observer(() => {
-  const canvasRef = React.useRef<HTMLCanvasElement | null>(null)
+  const canvasRef = React.useRef<HTMLCanvasElement>(null)
+  const usernameRef = React.useRef<HTMLInputElement>(null)
 
-  useEffect(() => {
+  const [showModal, setShowModal] = React.useState(true)
+
+  React.useEffect(() => {
     if (!canvasRef.current) return
 
     canvasState.setCanvas(canvasRef.current)
     const toolByDefault = new Brush(canvasRef.current)
     toolState.setTool(toolByDefault)
-  }, [canvasRef.current])
+  }, [])
 
   const onMouseDown = () => {
     if (canvasRef.current) {
@@ -24,10 +28,25 @@ const Canvas = observer(() => {
     }
   }
 
+  const onSignIn = () => {
+    canvasState.setUserName(usernameRef.current?.value || '')
+    setShowModal(false)
+  }
 
   return (
     <div className="canvas">
       <canvas onMouseDown={onMouseDown} ref={canvasRef} width={1400} height={700} />
+      <ModalForm className='modal' show={showModal}>
+        <header>
+          <h2>Enter your name:</h2>
+        </header>
+        <main>
+          <input ref={usernameRef} type='text' />
+        </main>
+        <footer>
+          <button onClick={onSignIn}>Sign in</button>
+        </footer>
+      </ModalForm>
     </div>
   );
 });
