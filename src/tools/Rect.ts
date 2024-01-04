@@ -1,14 +1,14 @@
 import Tool from './Tool'
 
-export default class Brush extends Tool {
+export default class Rect extends Tool {
   isMouseDown = false
   startX = 0
   startY = 0
 
   data = ''
 
-  constructor(canvas: HTMLCanvasElement) {
-    super(canvas)
+  constructor(canvas: HTMLCanvasElement, socket: WebSocket, sessionId: string) {
+    super(canvas, socket, sessionId)
     this.unlisten()
     this.listen()
   }
@@ -25,8 +25,23 @@ export default class Brush extends Tool {
     this.canvas.onmousemove = null
   }
 
-  mouseUpHandler() {
+  mouseUpHandler(e: MouseEvent) {
     this.isMouseDown = false
+
+    const target = e.target as HTMLElement
+    let currentX = e.pageX - target.offsetLeft
+    let currentY = e.pageY - target.offsetTop
+    this.socket.send(JSON.stringify({
+      method: 'draw',
+      id: this.sessionId,
+      figure: {
+        type: 'rect',
+        x: this.startX,
+        y: this.startY,
+        width: currentX - this.startX,
+        height: currentY - this.startY,
+      }
+    }))
   }
 
   mouseDownHandler(e: MouseEvent) {
@@ -49,17 +64,28 @@ export default class Brush extends Tool {
     this.draw(this.startX, this.startY, currentX - this.startX, currentY - this.startY)
   }
 
-  draw(x: number, y: number, w: number, h: number) {
-    const img = new Image()
-    img.src = this.data
-
-    img.onload = () => {
-      this.context?.clearRect(0, 0, this.canvas.width, this.canvas.height)
-      this.context?.drawImage(img, 0, 0, this.canvas.width, this.canvas.height)
-      this.context?.beginPath()
-      this.context?.rect(x, y, w, h)
-      this.context?.fill()
-      this.context?.stroke()
-    }
+  static draw(x: number, y: number, width: number, height: number, context?: CanvasRenderingContext2D | null) {
+    context?.beginPath()
+    context?.rect(x, y, width, height)
+    context?.fill()
+    context?.stroke()
   }
+
+  draw(x: number, y: number, width: number, height: number) {
+    Rect.draw(x, y, width, height, this.context)
+  }
+
+  // draw(x: number, y: number, w: number, h: number) {
+  //   const img = new Image()
+  //   img.src = this.data
+
+  //   img.onload = () => {
+  //     this.context?.clearRect(0, 0, this.canvas.width, this.canvas.height)
+  //     this.context?.drawImage(img, 0, 0, this.canvas.width, this.canvas.height)
+  //     this.context?.beginPath()
+  //     this.context?.rect(x, y, w, h)
+  //     this.context?.fill()
+  //     this.context?.stroke()
+  //   }
+  // }
 }

@@ -3,8 +3,6 @@ import React from 'react'
 
 import {ModalForm} from 'components/ModalForm'
 import canvasState from 'store/canvasState'
-import toolState from 'store/toolState'
-import Brush from 'tools/Brush'
 
 import 'styles/canvas.scss'
 
@@ -18,8 +16,6 @@ const Canvas = observer(() => {
     if (!canvasRef.current) return
 
     canvasState.setCanvas(canvasRef.current)
-    const toolByDefault = new Brush(canvasRef.current)
-    toolState.setTool(toolByDefault)
   }, [])
 
   const onMouseDown = () => {
