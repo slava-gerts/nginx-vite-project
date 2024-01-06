@@ -1,5 +1,6 @@
 import {observer} from 'mobx-react-lite'
 import React from 'react'
+import axios from 'axios'
 
 import {ModalForm} from 'components/ModalForm'
 import canvasState from 'store/canvasState'
@@ -18,9 +19,29 @@ const Canvas = observer(() => {
     canvasState.setCanvas(canvasRef.current)
   }, [])
 
+  React.useEffect(() => {
+    if (!canvasState.sessionId) return
+
+    axios.get(`http://localhost:5000/image?id=${canvasState.sessionId}`).then(response => {
+      const img = new Image()
+      img.src = response.data
+      img.onload = () => {
+        const context = canvasRef.current?.getContext('2d')
+        context?.clearRect(0, 0, canvasRef.current?.width ?? 0, canvasRef.current?.height ?? 0)
+        context?.drawImage(img, 0, 0, canvasRef.current?.width ?? 0, canvasRef.current?.height ?? 0)
+      }
+    })
+  })
+
   const onMouseDown = () => {
     if (canvasRef.current) {
       canvasState.pushToUndo(canvasRef.current.toDataURL())
+    }
+  }
+
+  const onMouseUp = () => {
+    if (canvasRef.current) {
+      axios.post(`http://localhost:5000/image?id=${canvasState.sessionId}`, {img: canvasRef.current.toDataURL()}).then(response => console.log(response.data))
     }
   }
 
@@ -31,7 +52,7 @@ const Canvas = observer(() => {
 
   return (
     <div className="canvas">
-      <canvas onMouseDown={onMouseDown} ref={canvasRef} width={1400} height={700} />
+      <canvas onMouseDown={onMouseDown} onMouseUp={onMouseUp} ref={canvasRef} width={1400} height={700} />
       <ModalForm className='modal' show={showModal}>
         <header>
           <h2>Enter your name:</h2>

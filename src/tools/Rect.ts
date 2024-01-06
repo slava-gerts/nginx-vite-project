@@ -40,6 +40,7 @@ export default class Rect extends Tool {
         y: this.startY,
         width: currentX - this.startX,
         height: currentY - this.startY,
+        color: this.context?.fillStyle,
       }
     }))
   }
@@ -61,18 +62,21 @@ export default class Rect extends Tool {
     const target = e.target as HTMLElement
     let currentX = e.pageX - target.offsetLeft
     let currentY = e.pageY - target.offsetTop
-    this.draw(this.startX, this.startY, currentX - this.startX, currentY - this.startY)
+    this.draw(this.startX, this.startY, currentX - this.startX, currentY - this.startY, this.context?.fillStyle || 'black')
   }
 
-  static draw(x: number, y: number, width: number, height: number, context?: CanvasRenderingContext2D | null) {
-    context?.beginPath()
-    context?.rect(x, y, width, height)
-    context?.fill()
-    context?.stroke()
+  static draw(x: number, y: number, width: number, height: number, color: CanvasRenderingContext2D['fillStyle'], context?: CanvasRenderingContext2D | null) {
+    if (!context) return
+    
+    context.fillStyle = color
+    context.beginPath()
+    context.rect(x, y, width, height)
+    context.fill()
+    context.stroke()
   }
 
-  draw(x: number, y: number, width: number, height: number) {
-    Rect.draw(x, y, width, height, this.context)
+  draw(x: number, y: number, width: number, height: number, color: CanvasRenderingContext2D['fillStyle']) {
+    Rect.draw(x, y, width, height, color, this.context)
   }
 
   // draw(x: number, y: number, w: number, h: number) {

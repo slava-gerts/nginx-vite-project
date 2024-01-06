@@ -54,7 +54,7 @@ function drawHandler(msg: any) {
       Brush.draw(figure.x, figure.y, context)
       break
     case 'rect':
-      Rect.draw(figure.x, figure.y, figure.width, figure.height, context)
+      Rect.draw(figure.x, figure.y, figure.width, figure.height, figure.color, context)
       break
     case 'finish':
       context?.beginPath()

@@ -13,6 +13,18 @@ const ToolBar = () => {
     toolState.setStrokeColor(e.target.value)
   }
 
+  const onDownload = () => {
+    const dataUrl = canvasState.canvas?.toDataURL()
+    if (!dataUrl) return
+
+    const link = document.createElement('a')
+    link.href = dataUrl
+    link.download = `${canvasState.sessionId}.jpg`
+    document.body.appendChild(link)
+    link.click()
+    document.removeChild(link)
+  }
+
   return (
     <div className={classNames('toolbar')}>
       <section className='toolbar__left'>
@@ -26,7 +38,7 @@ const ToolBar = () => {
       <section className='toolbar__right'>
         <button className='toolbar__btn undo' onClick={() => canvasState.undo()}></button>
         <button className='toolbar__btn redo' onClick={() => canvasState.redo()}></button>
-        <button className='toolbar__btn save'></button>
+        <button className='toolbar__btn save' onClick={onDownload}></button>
       </section>
     </div>
   );
